@@ -7,8 +7,7 @@ namespace PDollarGestureRecognizer.Editor {
 
 		public static void Draw(Rect rect) {
 			if (_background == null) {
-				var path = "Assets/PDollarGestureRecognizer/Resources/Textures/background.png";
-				_background = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+				_background = Resources.Load<Texture2D>("Textures/background");
 			}
 			
 			Rect uvDrawRect = new Rect (
