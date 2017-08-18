@@ -1,40 +1,32 @@
-﻿using System.Resources;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace PDollarGestureRecognizer.Editor
-{
-    public class PDollarEditorWindow : EditorWindow
-    {
+namespace PDollarGestureRecognizer.Editor {
+    public class PDollarEditorWindow : EditorWindow {
         private static PDollarEditorWindow _editor;
         public static PDollarEditorWindow Editor {
-            get
-            {
+            get {
                 if (_editor == null) Init();
                 return _editor;
             }
         }
 
-        public static Rect WindowRect
-        {
+        public static Rect WindowRect {
             get { return Editor.position; }
         }
 
-        public static Vector3 Origin
-        {
+        public static Vector3 Origin {
             get { return new Vector3(WindowRect.width * .5f, WindowRect.height * .5f); }
         }
 
         [MenuItem("Window/Gesture Creator %g")]
-        static void Init()
-        {
+        private static void Init() {
             _editor = GetWindow<PDollarEditorWindow>(title: "Gesture Creator", focus: true);
             _editor.wantsMouseMove = true;
             _editor.Show();
         }
 
-        void OnGUI()
-        {
+        private void OnGUI() {
             DrawGrid();
             GestureDrawer.Draw();
             PDollarInputSystem.CallEventHandlers();
@@ -42,18 +34,15 @@ namespace PDollarGestureRecognizer.Editor
             PDollarContextMenu.Draw();
         }
 
-        void OnEnable()
-        {
+        private void OnEnable() {
             PDollarInputSystem.SetupInput();
         }
 
-        private void OnLostFocus()
-        {
+        private void OnLostFocus() {
             PDollarContextMenu.Hide();
         }
 
-        public new static void Repaint()
-        {
+        public new static void Repaint() {
             ((EditorWindow) Editor).Repaint();
         }
 

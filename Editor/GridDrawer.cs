@@ -1,15 +1,12 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace PDollarGestureRecognizer.Editor
-{
+namespace PDollarGestureRecognizer.Editor {
 	public static class GridDrawer {
 		private static Texture2D _background;
 
-		public static void Draw(Rect rect)
-		{
-			if (_background == null)
-			{
+		public static void Draw(Rect rect) {
+			if (_background == null) {
 				var path = "Assets/PDollarGestureRecognizer/Resources/Textures/background.png";
 				_background = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
 			}

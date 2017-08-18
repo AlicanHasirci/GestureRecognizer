@@ -1,19 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace PDollarGestureRecognizer
-{
-    public class PointCloudRecognizer
-    {
-        public static string Classify(Gesture candidate, Gesture[] trainingSet)
-        {
-            float minDistance = float.MaxValue;
-            string gestureClass = "";
+namespace PDollarGestureRecognizer {
+    public class PointCloudRecognizer {
+        public static string Classify(Point[] points, Gesture[] trainingSet) {
+            var minDistance = float.MaxValue;
+            var gestureClass = "";
             foreach (Gesture template in trainingSet)
             {
-                float dist = GreedyCloudMatch(candidate.Points, template.Points);
-                if (dist < minDistance)
-                {
+                float dist = GreedyCloudMatch(points, template.Points);
+                if (dist < minDistance) {
                     minDistance = dist;
                     gestureClass = template.name;
                 }
@@ -21,45 +18,40 @@ namespace PDollarGestureRecognizer
             return gestureClass;
         }
         
-        private static float GreedyCloudMatch(Point[] points1, Point[] points2)
-        {
-            int n = points1.Length;
-            float eps = 0.5f;
-            int step = (int)Math.Floor(Math.Pow(n, 1.0f - eps));
-            float minDistance = float.MaxValue;
-            for (int i = 0; i < n; i += step)
-            {
-                float dist1 = CloudDistance(points1, points2, i);
-                float dist2 = CloudDistance(points2, points1, i);
+        private static float GreedyCloudMatch(Point[] points1, Point[] points2) {
+            var n = points1.Length;
+            var eps = 0.5f;
+            var step = (int)Math.Floor(Math.Pow(n, 1.0f - eps));
+            var minDistance = float.MaxValue;
+            for (var i = 0; i < n; i += step) {
+                var dist1 = CloudDistance(points1, points2, i);
+                var dist2 = CloudDistance(points2, points1, i);
                 minDistance = Math.Min(minDistance, Math.Min(dist1, dist2));
             }
             return minDistance;
         }
 
-        private static float CloudDistance(Point[] points1, Point[] points2, int startIndex)
-        {
-            int n = points1.Length;
-            bool[] matched = new bool[n];
+        private static float CloudDistance(Point[] points1, Point[] points2, int startIndex) {
+            var n = points1.Length;
+            var matched = new bool[n];
             Array.Clear(matched, 0, n);
 
-            float sum = 0;
-            int i = startIndex;
-            do
-            {
-                int index = -1;
-                float minDistance = float.MaxValue;
-                for(int j = 0; j < n; j++)
-                    if (!matched[j])
-                    {
-                        float dist = Geometry.SqrEuclideanDistance(points1[i], points2[j]);
-                        if (dist < minDistance)
-                        {
+            var sum = 0f;
+            var i = startIndex;
+            do {
+                var index = -1;
+                var minDistance = float.MaxValue;
+                for (var j = 0; j < n; j++) {
+                    if (!matched[j]) {
+                        var dist = (points1[i].Position - points2[j].Position).sqrMagnitude;
+                        if (dist < minDistance) {
                             minDistance = dist;
                             index = j;
                         }
                     }
+                }
                 matched[index] = true;
-                float weight = 1.0f - ((i - startIndex + n) % n) / (1.0f * n);
+                var weight = 1.0f - ((i - startIndex + n) % n) / (1.0f * n);
                 sum += weight * minDistance;
                 i = (i + 1) % n;
             } while (i != startIndex);

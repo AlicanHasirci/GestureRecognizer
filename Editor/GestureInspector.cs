@@ -1,11 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace PDollarGestureRecognizer.Editor
-{
+namespace PDollarGestureRecognizer.Editor {
 	[CustomEditor(typeof(Gesture))]
 	public class GestureInspector : UnityEditor.Editor
 	{
@@ -14,24 +10,20 @@ namespace PDollarGestureRecognizer.Editor
 		private Gesture _gesture;
 		private Texture2D _background;
 
-		public override void OnPreviewGUI(Rect r, GUIStyle background)
-		{
+		public override void OnPreviewGUI(Rect r, GUIStyle background) {
+			if (Event.current.type != EventType.Repaint) return;
+			
 			_gesture = (Gesture) target;
-			if (Event.current.type == EventType.Repaint)
-			{
-				GridDrawer.Draw(r);
-				Handles.color = Color.cyan;
-				DrawGesture(r);
-			}
+			GridDrawer.Draw(r);
+			Handles.color = Color.cyan;
+			DrawGesture(r);
 		}
 
-		private void DrawGesture(Rect r)
-		{
+		private void DrawGesture(Rect r) {
 			var scale = r.width / r.height > 0 ? r.height * .75f : r.width * .75f;
 			var translate = r.position + (r.size * .5f);
-			var transform = Matrix4x4.Translate(translate) * Matrix4x4.Scale(Vector3.one * scale);
-			for (int i = 0; i < _gesture.Points.Length - 1; i++)
-			{
+			var transform = Matrix4x4.Translate(translate) * Matrix4x4.Scale(new Vector3(1, -1, 1) * scale);
+			for (int i = 0; i < _gesture.Points.Length - 1; i++) {
 				var curr = _gesture.Points[i];
 				var next = _gesture.Points[i + 1];
 				if (curr.Id != next.Id) continue;
