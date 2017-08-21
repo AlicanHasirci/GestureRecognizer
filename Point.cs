@@ -24,7 +24,8 @@ namespace PDollarGestureRecognizer {
 
     public static class PointExtension {
         public static Point[] Resample(this Point[] points, int n) {
-            if (points.Length <= n) return null;
+            if (points.Length == n) return points;
+            if (points.Length < n) throw new ArgumentException("Point count lower than sample size.");
             
             var newPoints = new Point[n];
             newPoints[0] = new Point(points[0].Position, points[0].Id);
@@ -32,7 +33,7 @@ namespace PDollarGestureRecognizer {
 
             var interval = points.PathLength() / (n - 1);
             var totalDistance = 0f;
-            for (int i = 1; i < points.Length; i++) {
+            for (var i = 1; i < points.Length; i++) {
                 if (points[i].Id == points[i - 1].Id) {
                     var distance = Vector2.Distance(points[i - 1].Position, points[i].Position);
                     if (totalDistance + distance >= interval)

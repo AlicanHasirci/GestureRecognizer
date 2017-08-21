@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace PDollarGestureRecognizer {
     public class PointCloudRecognizer {
-        public static string Classify(Point[] points, Gesture[] trainingSet) {
-            var minDistance = float.MaxValue;
-            var gestureClass = "";
+        public static string Classify(Point[] points, Gesture[] trainingSet, float tolerance = float.MaxValue) {
+            var minDistance = tolerance;
+            var gestureClass = string.Empty;
             foreach (Gesture template in trainingSet)
             {
                 float dist = GreedyCloudMatch(points, template.Points);
